@@ -17,18 +17,14 @@ namespace tictactoe
         private System.Drawing.Pen player = new System.Drawing.Pen(System.Drawing.Color.Red, 5);
         private System.Drawing.Pen ki = new System.Drawing.Pen(System.Drawing.Color.Blue, 5);
         System.Drawing.Graphics formGraphics;
+        System.Drawing.Rectangle rectangle;
 
         // Settings
         public bool fun = false;
+        private int step = 0;
 
         // Gamefield
         int[,] gamefield = {
-                           {0,0,0},
-                           {0,0,0},
-                           {0,0,0}
-                           };
-
-        int[,] drawgamefield = {
                            {0,0,0},
                            {0,0,0},
                            {0,0,0}
@@ -43,6 +39,7 @@ namespace tictactoe
         {
             formGraphics = this.CreateGraphics();
             drawField();
+            step = 0;
         }
 
         private void drawField()
@@ -135,6 +132,9 @@ namespace tictactoe
                 if(NotFull(box)) 
                 {
                     drawBox(box,1);
+                    step++;
+                    runki();
+                    checkWon();
                 }
                 else
                 {
@@ -145,76 +145,327 @@ namespace tictactoe
             {
                 MessageBox.Show("Keine Ahnung wo du hin klickst, aber hier ist kein Feld.");
             }
-            runki();
         }
+
         private void runki()
         {
             if(fun == true)
             {
-                MessageBox.Show("Haha... 42 The meaning of life... But you will not win this game done");
+                MessageBox.Show("Haha... 42 The meaning of life... But you will not win this game!");
                 MessageBox.Show("Computer won");
                 this.Visible = false;
             }
+            if(step < 3)
+            {
+                int old_step = step;
+                Random rand = new Random();
+                while(old_step == step)
+                {
+                    int box = rand.Next(10);
+                    if (NotFull(box) && box != 0)
+                    {
+                        drawBox(box, 2);
+                        step++;
+                    }
+                }
+            }
+
+        }
+
+        private void checkWon()
+        {
+            int count = 0;
+            bool won = false;
+
+            for (int i = 0; i < 3; i++)
+            {
+                if (!won)
+                {
+                    count = 0;
+                    for (int o = 0; o < 3; o++)
+                    {
+                        if (gamefield[o, i] == 1)
+                        {
+                            count++;
+                            if (count == 3)
+                            {
+                                i = 3;
+                                won = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < 3; i++)
+            {
+                if (!won)
+                {
+                    count = 0;
+                    for (int o = 0; o < 3; o++)
+                    {
+                        if (gamefield[i, o] == 1 && !won)
+                        {
+                            count++;
+                            if (count == 3)
+                            {
+                                i = 3;
+                                won = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(won)
+            {
+                MessageBox.Show("Good Game! You won!");
+                this.Visible = false;
+            }
+
+        }
+
+        private bool checkHor()
+        {
+            int count = 0;
+            bool won = false;
+            for (int i = 0; i < 3; i++)
+            {
+                if (!won)
+                {
+                    count = 0;
+                    for (int o = 0; o < 3; o++)
+                    {
+                        if (gamefield[o, i] == 1)
+                        {
+                            count++;
+                            if (count == 2)
+                            {
+                                i = 3;
+                                won = true;
+                            }
+                        }
+                    }
+                }
+            }
+            return won;
+        }
+
+        private bool checkVert()
+        {
+            int count = 0;
+            bool won = false;
+            for (int i = 0; i < 3; i++)
+            {
+                if (!won)
+                {
+                    count = 0;
+                    for (int o = 0; o < 3; o++)
+                    {
+                        if (gamefield[i, o] == 1)
+                        {
+                            count++;
+                            if (count == 2)
+                            {
+                                i = 3;
+                                won = true;
+                            }
+                        }
+                    }
+                }
+            }
+            return won;
+        }
+
+        private int getKIchoice()
+        {
+            int count = 0;
+            bool hor = false;
+            bool vert = false;
+
+         
+
+            for (int i = 0; i < 3; i++)
+            {
+                if (!won)
+                {
+                    for (int o = 0; o < 3; o++)
+                    {
+                        if (gamefield[o, 1] == 1)
+                        {
+                            count++;
+                            if (count == 3)
+                            {
+                                i = 3;
+                                won = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < 3; i++)
+            {
+                if (!won)
+                {
+                    for (int o = 0; o < 3; o++)
+                    {
+                        if (gamefield[o, 2] == 1)
+                        {
+                            count++;
+                            if (count == 3)
+                            {
+                                i = 3;
+                                won = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < 3; i++)
+            {
+                if (!won)
+                {
+                    for (int o = 0; o < 3; o++)
+                    {
+                        if (gamefield[i, o] == 1 && !won)
+                        {
+                            count++;
+                            if (count == 3)
+                            {
+                                i = 3;
+                                won = true;
+                            }
+                        }
+                    }
+                }
+            }
+
         }
 
         private void drawBox(int box, int who)
         {
-            switch (box)
+            if (who == 1)
             {
-                case 1:
-                    formGraphics.DrawLine(player, 0, 0, 200, 200);
-                    formGraphics.DrawLine(player, 0, 200, 200, 0);
-                    drawField();
-                    Fill(box,who);
-                    break;
-                case 2:
-                    formGraphics.DrawLine(player, 200, 0, 400, 200);
-                    formGraphics.DrawLine(player, 200, 200, 400, 0);
-                    drawField();
-                    Fill(box, who);
-                    break;
-                case 3:
-                    formGraphics.DrawLine(player, 400, 0, 600, 200);
-                    formGraphics.DrawLine(player, 400, 200, 600, 0);
-                    drawField();
-                    Fill(box, who);
-                    break;
-                case 4:
-                    formGraphics.DrawLine(player, 0, 200, 200, 400);
-                    formGraphics.DrawLine(player, 0, 400, 200, 200);
-                    drawField();
-                    Fill(box, who);
-                    break;
-                case 5:
-                    formGraphics.DrawLine(player, 200, 200, 400, 400);
-                    formGraphics.DrawLine(player, 200, 400, 400, 200);
-                    drawField();
-                    Fill(box, who);
-                    break;
-                case 6:
-                    formGraphics.DrawLine(player, 400, 200, 600, 400);
-                    formGraphics.DrawLine(player, 400, 400, 600, 200);
-                    drawField();
-                    Fill(box, who);
-                    break;
-                case 7:
-                    formGraphics.DrawLine(player, 0, 400, 200, 600);
-                    formGraphics.DrawLine(player, 0, 600, 200, 400);
-                    drawField();
-                    Fill(box, who);
-                    break;
-                case 8:
-                    formGraphics.DrawLine(player, 200, 400, 400, 600);
-                    formGraphics.DrawLine(player, 200, 600, 400, 400);
-                    drawField();
-                    Fill(box, who);
-                    break;
-                case 9:
-                    formGraphics.DrawLine(player, 400, 400, 600, 600);
-                    formGraphics.DrawLine(player, 400, 600, 600, 400);
-                    drawField();
-                    Fill(box, who);
-                    break;
+                switch (box)
+                {
+                    case 1:
+                        formGraphics.DrawLine(player, 0, 0, 200, 200);
+                        formGraphics.DrawLine(player, 0, 200, 200, 0);
+                        drawField();
+                        Fill(box, who);
+                        break;
+                    case 2:
+                        formGraphics.DrawLine(player, 200, 0, 400, 200);
+                        formGraphics.DrawLine(player, 200, 200, 400, 0);
+                        drawField();
+                        Fill(box, who);
+                        break;
+                    case 3:
+                        formGraphics.DrawLine(player, 400, 0, 600, 200);
+                        formGraphics.DrawLine(player, 400, 200, 600, 0);
+                        drawField();
+                        Fill(box, who);
+                        break;
+                    case 4:
+                        formGraphics.DrawLine(player, 0, 200, 200, 400);
+                        formGraphics.DrawLine(player, 0, 400, 200, 200);
+                        drawField();
+                        Fill(box, who);
+                        break;
+                    case 5:
+                        formGraphics.DrawLine(player, 200, 200, 400, 400);
+                        formGraphics.DrawLine(player, 200, 400, 400, 200);
+                        drawField();
+                        Fill(box, who);
+                        break;
+                    case 6:
+                        formGraphics.DrawLine(player, 400, 200, 600, 400);
+                        formGraphics.DrawLine(player, 400, 400, 600, 200);
+                        drawField();
+                        Fill(box, who);
+                        break;
+                    case 7:
+                        formGraphics.DrawLine(player, 0, 400, 200, 600);
+                        formGraphics.DrawLine(player, 0, 600, 200, 400);
+                        drawField();
+                        Fill(box, who);
+                        break;
+                    case 8:
+                        formGraphics.DrawLine(player, 200, 400, 400, 600);
+                        formGraphics.DrawLine(player, 200, 600, 400, 400);
+                        drawField();
+                        Fill(box, who);
+                        break;
+                    case 9:
+                        formGraphics.DrawLine(player, 400, 400, 600, 600);
+                        formGraphics.DrawLine(player, 400, 600, 600, 400);
+                        drawField();
+                        Fill(box, who);
+                        break;
+                }
+            }
+            else
+            {
+               switch (box)
+                {
+
+                    case 1:
+                        rectangle = new System.Drawing.Rectangle(2, 2, 194, 194);
+                        formGraphics.DrawEllipse(ki, rectangle);
+                        drawField();
+                        Fill(box, who);
+                        break;
+                    case 2:
+                        rectangle = new System.Drawing.Rectangle(204, 1, 194, 194);
+                        formGraphics.DrawEllipse(ki, rectangle);
+                        drawField();
+                        Fill(box, who);
+                        break;
+                    case 3:
+                        rectangle = new System.Drawing.Rectangle(404, 1, 194, 194);
+                        formGraphics.DrawEllipse(ki, rectangle);
+                        drawField();
+                        Fill(box, who);
+                        break;
+                    case 4:
+                         rectangle = new System.Drawing.Rectangle(2, 202, 194, 194);
+                        formGraphics.DrawEllipse(ki, rectangle);
+                        drawField();
+                        Fill(box, who);
+                        break;
+                    case 5:
+                       rectangle = new System.Drawing.Rectangle(204, 201, 194, 194);
+                        formGraphics.DrawEllipse(ki, rectangle);
+                        drawField();
+                        Fill(box, who);
+                        break;
+                    case 6:
+                        rectangle = new System.Drawing.Rectangle(404, 201, 194, 194);
+                        formGraphics.DrawEllipse(ki, rectangle);
+                        drawField();
+                        Fill(box, who);
+                        break;
+                    case 7:
+                        rectangle = new System.Drawing.Rectangle(2, 402, 194, 194);
+                        formGraphics.DrawEllipse(ki, rectangle);
+                        drawField();
+                        Fill(box, who);
+                        break;
+                    case 8:
+                        rectangle = new System.Drawing.Rectangle(204, 401, 194, 194);
+                        formGraphics.DrawEllipse(ki, rectangle);
+                        drawField();
+                        Fill(box, who);
+                        break;
+                    case 9:
+                        rectangle = new System.Drawing.Rectangle(404, 401, 194, 194);
+                        formGraphics.DrawEllipse(ki, rectangle);
+                        drawField();
+                        Fill(box, who);
+                        break;
+                }
             }
         }
 
