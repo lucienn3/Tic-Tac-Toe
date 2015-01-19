@@ -190,6 +190,10 @@ namespace tictactoe
                     }
                 }
             }
+            else
+            {
+                getKIchoice();
+            }
 
         }
 
@@ -310,12 +314,13 @@ namespace tictactoe
         {
             int count = 0;
             int won = 0;
-            for (int i = 0; i < 3; i++)
+            count = 0;
+            for (int i = 0; i <= 2; i++)
             {
                 if (!(won == i))
                 {
                     count = 0;
-                    for (int o = 0; o < 3; o++)
+                    for (int o = 0; o <= 2; o++)
                     {
                         if (gamefield[i, o] == 1)
                         {
@@ -373,11 +378,12 @@ namespace tictactoe
             if(hor)
             {
                 col = getHor(2);
-                MessageBox.Show("Found at:" + col);
+                
             } 
             else if(vert)
             {
-
+                row = getVert(2);
+                
             }
             else if(toplbottomr)
             {
