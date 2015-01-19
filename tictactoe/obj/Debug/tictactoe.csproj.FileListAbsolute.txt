@@ -1,0 +1,10 @@
+c:\users\lucie_000\documents\visual studio 2013\Projects\tictactoe\tictactoe\bin\Debug\tictactoe.exe.config
+c:\users\lucie_000\documents\visual studio 2013\Projects\tictactoe\tictactoe\bin\Debug\tictactoe.exe
+c:\users\lucie_000\documents\visual studio 2013\Projects\tictactoe\tictactoe\bin\Debug\tictactoe.pdb
+c:\users\lucie_000\documents\visual studio 2013\Projects\tictactoe\tictactoe\obj\Debug\tictactoe.csprojResolveAssemblyReference.cache
+c:\users\lucie_000\documents\visual studio 2013\Projects\tictactoe\tictactoe\obj\Debug\tictactoe.Form1.resources
+c:\users\lucie_000\documents\visual studio 2013\Projects\tictactoe\tictactoe\obj\Debug\tictactoe.Properties.Resources.resources
+c:\users\lucie_000\documents\visual studio 2013\Projects\tictactoe\tictactoe\obj\Debug\tictactoe.csproj.GenerateResource.Cache
+c:\users\lucie_000\documents\visual studio 2013\Projects\tictactoe\tictactoe\obj\Debug\tictactoe.exe
+c:\users\lucie_000\documents\visual studio 2013\Projects\tictactoe\tictactoe\obj\Debug\tictactoe.pdb
+c:\users\lucie_000\documents\visual studio 2013\Projects\tictactoe\tictactoe\obj\Debug\tictactoe.Game.resources
