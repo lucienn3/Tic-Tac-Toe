@@ -28,6 +28,12 @@ namespace tictactoe
         {
             Game game = new Game();
             game.fun = false;
+            if (checkBox1.Checked)
+                game.easy = true;
+            else if (checkBox2.Checked)
+                game.easy = false;
+            else
+                game.easy = true;
             game.Visible = true;
         }
     }

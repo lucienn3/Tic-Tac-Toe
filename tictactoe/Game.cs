@@ -22,12 +22,13 @@ namespace tictactoe
         // Settings
         public bool fun = false;
         private int step = 0;
+        public bool easy = false;
 
         // Gamefield
         int[,] gamefield = {
-                           {0,0,0},
-                           {0,0,0},
-                           {0,0,0}
+                           {0,0,0}, //0 
+                           {0,0,0}, //1
+                           {0,0,0}  //2
                            };
 
         public Game()
@@ -98,6 +99,26 @@ namespace tictactoe
             return false;
         }
 
+        private bool filled(int box, int who)
+        {
+            if (box < 4)
+            {
+                if (gamefield[0, getarraybox(box)] == who)
+                    return true;
+            }
+            else if (box > 3 && box < 7)
+            {
+                if (gamefield[1, getarraybox(box)] == who)
+                    return true;
+            }
+            else if (box > 6 && box < 10)
+            {
+                if (gamefield[2, getarraybox(box)] == who)
+                    return true;
+            }
+            return false;
+        }
+
         private int getarraybox(int box)
         {
             if (box % 3 == 0)
@@ -155,11 +176,11 @@ namespace tictactoe
                 MessageBox.Show("Computer won");
                 this.Visible = false;
             }
-            if(step < 3)
+            if (easy || step < 3 || (!checkHor(2, 1) && !checkVert(2, 1) && !checkhrightleft(2) && !checkhleftright(2)))
             {
                 int old_step = step;
                 Random rand = new Random();
-                while(old_step == step)
+                while (old_step == step && checknotfull())
                 {
                     int box = rand.Next(10);
                     if (NotFull(box) && box != 0)
@@ -174,74 +195,38 @@ namespace tictactoe
 
         private void checkWon()
         {
-            int count = 0;
-            bool won = false;
-
-            for (int i = 0; i < 3; i++)
-            {
-                if (!won)
-                {
-                    count = 0;
-                    for (int o = 0; o < 3; o++)
-                    {
-                        if (gamefield[o, i] == 1)
-                        {
-                            count++;
-                            if (count == 3)
-                            {
-                                i = 3;
-                                won = true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            for (int i = 0; i < 3; i++)
-            {
-                if (!won)
-                {
-                    count = 0;
-                    for (int o = 0; o < 3; o++)
-                    {
-                        if (gamefield[i, o] == 1 && !won)
-                        {
-                            count++;
-                            if (count == 3)
-                            {
-                                i = 3;
-                                won = true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if(won)
+            if (checkHor(3,1) || checkVert(3,1))
             {
                 MessageBox.Show("Good Game! You won!");
+                this.Visible = false;
+            } 
+            else if (!checknotfull())
+            {
+                MessageBox.Show("No one won :( Try again");
                 this.Visible = false;
             }
 
         }
 
-        private bool checkHor()
+        private bool checkHor(int c, int who)
         {
             int count = 0;
             bool won = false;
-            for (int i = 0; i < 3; i++)
+            count = 0;
+            for (int i = 0; i <= 2; i++)
             {
                 if (!won)
                 {
                     count = 0;
-                    for (int o = 0; o < 3; o++)
+                    for (int o = 0; o <= 2; o++)
                     {
-                        if (gamefield[o, i] == 1)
+                        if (gamefield[o, i] == who)
                         {
                             count++;
-                            if (count == 2)
+                            if (count == c)
                             {
                                 i = 3;
+                                o = 3;
                                 won = true;
                             }
                         }
@@ -251,13 +236,83 @@ namespace tictactoe
             return won;
         }
 
-        private bool checkVert()
+        private bool checkVert(int c,int who)
         {
             int count = 0;
             bool won = false;
-            for (int i = 0; i < 3; i++)
+            count = 0;
+            for (int i = 0; i <= 2; i++)
             {
                 if (!won)
+                {
+                    count = 0;
+                    for (int o = 0; o <= 2; o++)
+                    {
+                        if (gamefield[i, o] == who)
+                        {
+                            count++;
+                            if (count == c)
+                            {
+                                i = 3;
+                                o = 3;
+                                won = true;
+                            }
+                        }
+                    }
+                }
+            }
+            return won;
+        }
+
+        private bool checknotfull()
+        {
+            for (int i = 0; i <= 2; i++)
+            {
+                  for (int o = 0; o <= 2; o++)
+                  {
+                        if (gamefield[i, o] == 0)
+                        {
+                            return true;
+                        }
+                    }
+            }
+            return false;
+        }
+
+        private int getHor(int c)
+        {
+            int count = 0;
+            int won = 0;
+            for (int i = 0; i < 3; i++)
+            {
+                if (!(won == i))
+                {
+                    count = 0;
+                    for (int o = 0; o < 3; o++)
+                    {
+                        if (gamefield[o, i] == 1)
+                        {
+                            count++;
+                            if (count == c)
+                            {
+                                won = i;
+                                i = 3;
+                                o = 3;
+                            }
+                        }
+                    }
+                }
+            }
+            return won;
+        }
+
+        private int getVert(int c)
+        {
+            int count = 0;
+            int won = 0;
+            for (int i = 0; i < 3; i++)
+            {
+                if (!(won == i))
                 {
                     count = 0;
                     for (int o = 0; o < 3; o++)
@@ -265,10 +320,11 @@ namespace tictactoe
                         if (gamefield[i, o] == 1)
                         {
                             count++;
-                            if (count == 2)
+                            if (count == c)
                             {
+                                won = i;
                                 i = 3;
-                                won = true;
+                                o = 3;
                             }
                         }
                     }
@@ -277,71 +333,64 @@ namespace tictactoe
             return won;
         }
 
-        private int getKIchoice()
+        private bool checkhleftright(int c)
         {
             int count = 0;
-            bool hor = false;
-            bool vert = false;
+            bool won = false;
 
-         
+            if (filled(1,1)) count++;
+            if (filled(5, 1)) count++;
+            if (filled(9, 1)) count++;
 
-            for (int i = 0; i < 3; i++)
+            if (count == c)
+                won = true;
+            return won;
+        }
+
+        private bool checkhrightleft(int c)
+        {
+            int count = 0;
+            bool won = false;
+
+            if (filled(3, 1)) count++;
+            if (filled(5, 1)) count++;
+            if (filled(7, 1)) count++;
+
+            if (count == c)
+                won = true;
+            return won;
+        }
+
+        private int getKIchoice()
+        {
+            int row = 0;
+            int col = 0;
+            bool hor = checkHor(2,1);
+            bool vert = checkVert(2,1);
+            bool toplbottomr = checkhleftright(2);
+            bool toprbottoml = checkhrightleft(2);
+
+            if(hor)
             {
-                if (!won)
-                {
-                    for (int o = 0; o < 3; o++)
-                    {
-                        if (gamefield[o, 1] == 1)
-                        {
-                            count++;
-                            if (count == 3)
-                            {
-                                i = 3;
-                                won = true;
-                            }
-                        }
-                    }
-                }
+                col = getHor(2);
+                MessageBox.Show("Found at:" + col);
+            } 
+            else if(vert)
+            {
+
+            }
+            else if(toplbottomr)
+            {
+
+            }
+            else if(toprbottoml)
+            {
+
             }
 
-            for (int i = 0; i < 3; i++)
-            {
-                if (!won)
-                {
-                    for (int o = 0; o < 3; o++)
-                    {
-                        if (gamefield[o, 2] == 1)
-                        {
-                            count++;
-                            if (count == 3)
-                            {
-                                i = 3;
-                                won = true;
-                            }
-                        }
-                    }
-                }
-            }
 
-            for (int i = 0; i < 3; i++)
-            {
-                if (!won)
-                {
-                    for (int o = 0; o < 3; o++)
-                    {
-                        if (gamefield[i, o] == 1 && !won)
-                        {
-                            count++;
-                            if (count == 3)
-                            {
-                                i = 3;
-                                won = true;
-                            }
-                        }
-                    }
-                }
-            }
 
+            return row*3+col;
         }
 
         private void drawBox(int box, int who)
